@@ -1,2 +1,2 @@
 # Animations-SwiftUI
-This project consists code to genetate animations and transitions using SwiftUI.
+This project is the sample to practice animation in IOS using swift and swiftUI.
