@@ -10,29 +10,25 @@ import SwiftUI
 struct ContentView: View {
     @State private var animationAmount: CGFloat = 1
     var body: some View {
-        Button("Tap me ") {
-//            animationAmount += 1
-        }
-        .padding(50)
-        .background(Color.red)
-        .foregroundColor(.white)
-        .clipShape(Rectangle())
-        
-        .overlay(
-        Rectangle()
-            .stroke(Color.red)
+        print(animationAmount)
+       return VStack {
+            Stepper("Scale Amount", value: $animationAmount.animation(
+                Animation.easeInOut(duration: 1)
+                    .repeatCount(3, autoreverses: true)
+                
+            ), in: 1...10)
+            Spacer()
+            
+            Button("Tap Me") {
+                self.animationAmount += 1
+            }
+            .padding(40)
+            .background(Color.red)
+            .foregroundColor(.white)
+            .clipShape(Circle())
             .scaleEffect(animationAmount)
-            .opacity(Double(2 - animationAmount))
-            .animation(
-                Animation.easeInOut(duration: 2)
-                    .repeatForever(autoreverses: false)
-            )
-        )
-        .onAppear {
-            self.animationAmount = 2
+            
         }
-//        .blur(radius: (animationAmount - 1) * 3)
-        
         
     }
 }
