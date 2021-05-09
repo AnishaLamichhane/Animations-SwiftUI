@@ -8,29 +8,29 @@
 import SwiftUI
 
 struct ContentView: View {
+    let letters = Array("Hello SwiftUI")
+    @State private var enabled = false
+    @State private var dragAmount = CGSize.zero
     
-    @State private var dragAmount = CGSize.zero //we need some state to store the amount of their drag:
-    
-
     var body: some View {
-        
-        LinearGradient(gradient: Gradient(colors: [.yellow, .red]), startPoint: .topLeading, endPoint: .bottomTrailing)
-            .frame(width: 300, height: 300)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .offset(dragAmount)
-           
-            
-            .gesture(
-            DragGesture()
-                .onChanged{ self.dragAmount = $0.translation} // lets us run a closure whenever the user moves their finger.
-                .onEnded{ _ in
-                    withAnimation(.spring()) { // this is explicit animation 
-                        self.dragAmount = .zero } //lets us run a closure when the user lifts their finger off the screen, ending the drag.
-                    }
-                    
-            )
-           // its an implicit animation
-//            .animation(.spring())
+        HStack(spacing: 0){
+            ForEach (0..<letters.count) { num in
+                Text(String(self.letters[num]))
+                    .padding(5)
+                    .font(.title)
+                    .background(self.enabled ? Color.blue : Color.red)
+                    .offset(self.dragAmount)
+                    .animation(Animation.default.delay(Double(num)/20))
+            }
+        }
+        .gesture(
+        DragGesture()
+            .onChanged {self.dragAmount = $0.translation }
+            .onEnded { _ in
+                self.dragAmount = .zero
+                self.enabled.toggle()
+            }
+        )
     }
 }
 
