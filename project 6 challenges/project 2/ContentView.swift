@@ -6,6 +6,18 @@
 //
 
 import SwiftUI
+//struct to implement an shake effect when the answer is wrong
+struct Shake: GeometryEffect {
+    var amount: CGFloat = 10
+    var shakesPerUnit = 3
+    var animatableData: CGFloat
+
+    func effectValue(size: CGSize) -> ProjectionTransform {
+        ProjectionTransform(CGAffineTransform(translationX:
+            amount * sin(animatableData * .pi * CGFloat(shakesPerUnit)),
+            y: 0))
+    }
+}
 
 struct ContentView: View {
     @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK"].shuffled()
@@ -14,12 +26,14 @@ struct ContentView: View {
     @State private var scoreTitle = ""
     @State private var score = 0 //Challenge 1
     
-    @State private var correct = false
+//    @State private var correct = false
    
    @State private var correctAnswer = Int.random(in: 0...2)
     
     @State private var rotationAmount = 0.0
     @State private var opacityAmount = 1.0
+    
+    @State var attempts: Int = 0
     
     var body: some View {
         
@@ -61,6 +75,9 @@ struct ContentView: View {
                     .rotation3DEffect(.degrees(number == self.correctAnswer ? self.rotationAmount : 0), axis: (x: 0, y: 1, z: 0))
                     .opacity(number == self.correctAnswer ? 1 : self.opacityAmount)
                     
+//                    challenge 3
+                    .modifier(Shake(animatableData: CGFloat(self.attempts)))
+                    
                 
                    
                 }
@@ -79,6 +96,7 @@ struct ContentView: View {
                 self.askQuestion()
             })
         }
+        .edgesIgnoringSafeArea(.all)
     }
     
 //    challenge 1
@@ -97,6 +115,7 @@ struct ContentView: View {
             
             scoreTitle = "Wrong!! that is the flag of \(countries[number])"  // challenge 3
             score -= 3
+            self.attempts += 1
            
         }
         showingScore = true
@@ -111,6 +130,7 @@ struct ContentView: View {
            }
            
            self.rotationAmount = 0.0
+    self.attempts = 0
     }
 }
 
@@ -119,3 +139,4 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
